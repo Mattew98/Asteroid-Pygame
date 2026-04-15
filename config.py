@@ -1,0 +1,48 @@
+# Asteroid pygame config file
+# University project
+# Matthew Riddoch
+
+# UI
+WIDTH, HEIGHT = 1200, 800
+FPS = 60
+
+# Game
+SHIELD_SIZE = 50
+ASTEROID_RADIUS_MIN = 30
+ASTEROID_RADIUS_MAX = 75
+ASTEROID_SPEED_MIN = 1
+ASTEROID_SPEED_MAX = 3
+ASTEROID_SPLIT_SIZE = 20
+ASTEROID_VERTICES = 10
+BULLET_RADIUS = 8
+BULLET_SPEED = 10
+SHIP_SIZE = 40
+SHIP_SPEED = 5
+ASTEROID_START = 5
+SCORE_INCREMENT = 100
+# Game Dictionaries
+DIFFICULTY_TYPES = ["Easy","Medium","Hard"]
+ASTEROID_NUMBER = {"Easy":1,"Medium":2,"Hard":3}
+DAMAGE_MULTIPLIER = {"Easy":0.2,"Medium":0.4,"Hard":0.6}
+SHIP_HEALTH = {"Easy":200,"Medium":100,"Hard":50}
+SHIELD_HEALTH = {"Easy":50,"Medium":25,"Hard":10}
+
+# Colors
+EIGENGRAU = (22, 22, 29)
+WHITE = (255, 255, 255)
+GREY = (127, 127, 127)
+BLACK = (0, 0, 0)
+RED = (255, 0, 0)
+ORANGE = (255, 127, 0)
+YELLOW = (255, 255, 0)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
+PURPLE = (255,0,255)
+COLOURS = [WHITE,GREY,RED,ORANGE,YELLOW,GREEN,BLUE,PURPLE]
+
+# Standard settings, changed at start menu
+SHIP_COLOUR = GREEN
+BULLET_COLOUR = RED
+ASTEROID_COLOUR = GREY
+DIFFICULTY = "Medium"
+
