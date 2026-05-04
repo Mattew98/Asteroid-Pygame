@@ -20,7 +20,7 @@ screen = pygame.display.set_mode((conf.WIDTH, conf.HEIGHT))
 pygame.display.set_caption("Asteroid Game")
 
 # Fonts
-font = pygame.font.SysFont("Arial", 24)
+font = pygame.font.SysFont("Arial", 20)
 titlefont = pygame.font.SysFont("Arial", 50)
 subtitlefont = pygame.font.SysFont("Arial",36)
 
@@ -261,10 +261,14 @@ while playing and not error:
             asteroid.draw()
             # Check for collisions
             for collider in debris:
-                if math.sqrt((asteroid.x - collider.x)**2+(asteroid.y - collider.y)**2) < asteroid.size*1.2 + collider.size*1.2 and collider != asteroid: # Use the size for an in initial circular hitbox
+                if math.sqrt((asteroid.x - collider.x)**2+(asteroid.y - collider.y)**2) < asteroid.size + collider.size and collider != asteroid: # Use the size for an in initial circular hitbox
                     colliding = func.collide(collider.vertices,asteroid.vertices) # Refine hitbox using object's vertices
                     if colliding == True:
-                        error, error_message = func.validate(collider.type, str,(0,0), "class.type attribute")                      
+                        error, error_message = func.validate(collider.type, str,(0,0), "class.type attribute")  
+                        # Calculate new angle for deflected asteroid
+                        ang = (math.degrees(math.atan((collider.y-asteroid.y)/(collider.x-asteroid.x)))) % 360 # Get angle between 0 and 360 to make it clearer for debugging
+                        if collider.x < asteroid.x:
+                            ang += 180
                         if collider.type == "Bullet":
                             # Mark the asteroid for removal and split it into new asteroids
                             asteroids_to_remove.append(asteroid)
@@ -276,29 +280,19 @@ while playing and not error:
                             else:
                                 score += conf.SCORE_INCREMENT # Add to player score
                         if collider.type == "Asteroid":
-                            # Save values here so the second deflect does not use the asteroid's updated values
-                            new_angle, new_speed, new_x, new_y, new_size = asteroid.angle, asteroid.speed, asteroid.x, asteroid.y, asteroid.size
-                            # Run deflect functions
-                            asteroid.deflect(collider.angle,collider.speed, collider.x, collider.y, collider.size)
-                            collider.deflect(new_angle,new_speed,new_x,new_y,new_size)
+                            if asteroid.can_deflect + collider.can_deflect == 0:
+                                # Save values here so the second deflect does not use the asteroid's updated values
+                                speed1, x1, y1, size1 = asteroid.speed, asteroid.x, asteroid.y, asteroid.size
+                                speed2, x2, y2, size2 = collider.speed, collider.x, collider.y, collider.size
+                                # Run deflect functions
+                                asteroid.deflect((ang+180)%360,speed2,x2,y2,size2)
+                                collider.deflect(ang,speed1,x1,y1,size1)
                         if collider.type == "Ship":
                             # Damage the players
                             if debounces["damage"] == 0:
                                 collider.damage(asteroid.size)
                                 debounces["damage"] = 60
-                            # Apply new angle for deflected asteroid
-                            ang = math.degrees(math.tan((ship.y-asteroid.y)/(ship.x-asteroid.x))) % 360
-                            if ang < 0: ang = ang % 360 + 360 # Get angle between 0 and 360 to make it clearer for debugging
-                            # Validate the angle by relative position, if incorrect add 180 degrees to fix
-                            if asteroid.x > ship.x and asteroid.y > ship.y:
-                                if not (ang <= 90 and ang > 0): ang += 180
-                            if asteroid.x < ship.x and asteroid.y > ship.y:
-                                if not (ang <= 180 and ang > 90): ang += 180
-                            if asteroid.x < ship.x and asteroid.y < ship.y:
-                                if not (ang <= 270 and ang > 180): ang += 180
-                            if asteroid.x > ship.x and asteroid.y < ship.y:
-                                if not (ang <= 360 and ang > 270): ang += 180
-                            asteroid.deflect(ang, conf.SHIP_SPEED, ship.x, ship.y, ship.size+asteroid.size) # Deflect the asteroid
+                            asteroid.deflect((ang+180)%360, conf.SHIP_SPEED, ship.x, ship.y, ship.size+asteroid.size) # Deflect the asteroid
 
 
         # After the loop, remove destroyed asteroids and add new ones from splitting

@@ -119,8 +119,10 @@ class Asteroid:
         self.size = size
         self.angle = angle
         self.speed = speed
+        self.rotating = speed/2
         self.dx = math.cos(math.radians(angle)) * self.speed
         self.dy = math.sin(math.radians(angle)) * self.speed
+        self.can_deflect = 0 # Debounce
         self.type = "Asteroid"
         self.vertices = []
         self.tilt = random.randint(0,360) # So the asteroid rotation does not look the same each time, i.e. they don't all have a vertex at 0 radians
@@ -144,6 +146,9 @@ class Asteroid:
             self.y = 0 - self.size
 
     def draw(self): #Update asteroid display
+        self.tilt += self.rotating
+        if self.can_deflect > 0:
+            self.can_deflect -= 1
         self.vertices.clear()
         for i in range(len(self.vertex_sizes)):
             self.vertices.append(((self.x + math.cos(math.radians(self.tilt + (360*i/len(self.vertex_sizes))))*self.vertex_sizes[i]),
@@ -152,16 +157,20 @@ class Asteroid:
 
     def deflect(self, other_angle, other_speed, other_x, other_y, other_size): # Handles collisions by causing a static and then elastic collision
         # Static Collision
-        dist = math.sqrt((self.x-other_x)**2 + (self.y-other_y)**2)
-        ideal_dist = self.size + other_size
-        self.x += (self.x-other_x)*((ideal_dist-dist)/dist)/2
-        self.y += (self.y-other_y)*((ideal_dist-dist)/dist)/2
-        # Elastic Collisions
-        ratio = self.size/(other_size+self.size)
-        self.angle = other_angle
-        self.speed = (other_speed+self.speed) * ratio
-        self.dx = math.cos(math.radians(other_angle))*other_speed
-        self.dy = math.sin(math.radians(other_angle))*other_speed
+        if self.can_deflect == 0:
+            self.can_deflect = 5
+            self.rotating = -self.speed
+            dist = math.sqrt((self.x-other_x)**2 + (self.y-other_y)**2)
+            ideal_dist = self.size + other_size
+            self.x += ((ideal_dist-dist)/2)*math.cos(math.radians(other_angle))
+            self.y += ((ideal_dist-dist)/2)*math.sin(math.radians(other_angle))
+            # Elastic Collisions
+            ratio = other_size/(other_size+self.size)
+            self.angle = other_angle
+            self.speed = (other_speed+self.speed) * ratio
+            self.rotating = -self.speed/2
+            self.dx = math.cos(math.radians(other_angle))*self.speed
+            self.dy = math.sin(math.radians(other_angle))*self.speed
 
     def split(self):    #Split asteroid when hit and return two new, smaller asteroids
         if self.size > conf.ASTEROID_SPLIT_SIZE:

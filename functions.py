@@ -2,9 +2,6 @@
 # University project
 # Matthew Riddoch
 
-# Import pygame
-import pygame
-
 # Import config file
 import config as conf
 
