@@ -37,16 +37,16 @@ def write_text(screen, font, text, pos_x,pos_y,colour): # Writes a line of text 
 
 def controls_view(screen, status, font): # Grouped write_text() functions to keep code concise and avoid repetition every time the control guide is mentioned
     if status:
-        write_text(screen, font, "Press ENTER/RETURN to Quit", 5, 680, conf.WHITE)
-        write_text(screen, font, "W - Forward", 5, 695, conf.WHITE)
-        write_text(screen, font, "A - Strafe Left", 5, 710, conf.WHITE)
-        write_text(screen, font, "S - Backward", 5, 725, conf.WHITE)
-        write_text(screen, font, "D - Strafe Right", 5, 740, conf.WHITE)
-        write_text(screen, font, "Left Arrow - Rotate Left", 5, 755, conf.WHITE)
-        write_text(screen, font, "Right Arrow - Rotate Right", 5, 770, conf.WHITE)
-        write_text(screen, font, "Space - Fire", 5, 785, conf.WHITE)
+        write_text(screen, font, "Press ENTER/RETURN to Quit", 5, 670, conf.WHITE)
+        write_text(screen, font, "W - Forward", 5, 685, conf.WHITE)
+        write_text(screen, font, "A - Strafe Left", 5, 700, conf.WHITE)
+        write_text(screen, font, "S - Backward", 5, 715, conf.WHITE)
+        write_text(screen, font, "D - Strafe Right", 5, 730, conf.WHITE)
+        write_text(screen, font, "Left Arrow - Rotate Left", 5, 745, conf.WHITE)
+        write_text(screen, font, "Right Arrow - Rotate Right", 5, 760, conf.WHITE)
+        write_text(screen, font, "Space - Fire", 5, 775, conf.WHITE)
     else:
-        write_text(screen, font, "Press ESC to See Controls", 5, 785, conf.WHITE)
+        write_text(screen, font, "Press ESC to See Controls", 5, 775, conf.WHITE)
 
 def cycle(array,current_index,direction): # Handles any cycle through an array (used for colour and difficulty picking from config options)
     if direction == "Left":

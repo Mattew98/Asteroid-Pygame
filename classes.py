@@ -34,6 +34,14 @@ class Ship:
         dx, dy = dx / distance * self.speed, dy / distance * self.speed
         self.x += dx
         self.y += dy
+        if self.x < (0 - self.size):
+            self.x = conf.WIDTH + self.size
+        elif self.x > (conf.WIDTH + self.size):
+            self.x = 0 - self.size
+        if self.y < (0 - self.size):
+            self.y = conf.HEIGHT + self.size
+        elif self.y > (conf.HEIGHT + self.size):
+            self.y = 0 - self.size
 
     def rotate(self, direction): # Function that rotates the ship (changes its angle)
         self.angle += direction

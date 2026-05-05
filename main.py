@@ -211,7 +211,7 @@ while playing and not error:
         # Handle events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False     #This stops the inf loop (closing the game) - extremely important, do not alter unless you know what you are doing
+                running = False # This stops the inf loop (closing the game) - extremely important, do not alter unless you know what you are doing
 
         # Handle ship controls
         keys = pygame.key.get_pressed()
@@ -231,9 +231,9 @@ while playing and not error:
         if keys[pygame.K_d]:
             ship.move_towards(ship.x+conf.SHIP_SPEED,ship.y) # Move right
         if keys[pygame.K_LEFT]:
-            ship.rotate(-conf.SHIP_SPEED)  # Rotate counterclockwise
+            ship.rotate(-conf.SHIP_SPEED) # Rotate counterclockwise
         if keys[pygame.K_RIGHT]:
-            ship.rotate(conf.SHIP_SPEED)  # Rotate clockwise    
+            ship.rotate(conf.SHIP_SPEED) # Rotate clockwise    
         if keys[pygame.K_SPACE]:
             if not shooting:
                 new_bullet = gclass.Bullet(ship.x, ship.y, ship.angle)
@@ -252,8 +252,8 @@ while playing and not error:
                 debris.remove(bullet)
 
         # Move and draw asteroids
-        asteroids_to_remove = []  # List of asteroids to remove
-        new_asteroids = []  # List of new asteroids to add
+        asteroids_to_remove = [] # List of asteroids to remove
+        new_asteroids = [] # List of new asteroids to add
 
         # Check for collisions
         for asteroid in asteroids:
@@ -261,13 +261,13 @@ while playing and not error:
             asteroid.draw()
             # Check for collisions
             for collider in debris:
-                if math.sqrt((asteroid.x - collider.x)**2+(asteroid.y - collider.y)**2) < asteroid.size + collider.size and collider != asteroid: # Use the size for an in initial circular hitbox
+                if math.sqrt((asteroid.x - collider.x)**2+(asteroid.y - collider.y)**2) < asteroid.size + collider.size and collider != asteroid: # Use the size for an initial circular hitbox
                     colliding = func.collide(collider.vertices,asteroid.vertices) # Refine hitbox using object's vertices
                     if colliding == True:
                         error, error_message = func.validate(collider.type, str,(0,0), "class.type attribute")  
                         # Calculate new angle for deflected asteroid
                         ang = (math.degrees(math.atan((collider.y-asteroid.y)/(collider.x-asteroid.x)))) % 360 # Get angle between 0 and 360 to make it clearer for debugging
-                        if collider.x < asteroid.x:
+                        if collider.x < asteroid.x: # Account for arctan only having a domain of -pi/2 to pi/2
                             ang += 180
                         if collider.type == "Bullet":
                             # Mark the asteroid for removal and split it into new asteroids
